@@ -1,18 +1,16 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 // define mongodb connection URL // Lecture no 7
-// const mongoURL= 'mongodb://localhost:27017';// this is our local url
-const mongoURL = 'mongodb+srv://parthamaity2004:Partha988@cluster0.i5psrhz.mongodb.net/'
+// const mongoURL= process.env.DB_URL_LOCAL;// this is our local url
+// const mongoURL = 'mongodb+srv://parthamaity2004:Partha988@cluster0.euywxdp.mongodb.net/' this is the data which is replace vby dotenv because security perpose.
+const mongoURL=process.env.DB_URL;// this is the name that is define in .env file
 
 // setup connection
 mongoose.connect(mongoURL, {
-
-    // useNewUrlParser : true,
-    // useUnifiedTopology : true,
+    useNewUrlParser : true,
+    useUnifiedTopology : true,
 })
-mongoose.connect(mongoURL)
-  .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 
 const db=mongoose.connection;
