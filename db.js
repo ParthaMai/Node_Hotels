@@ -8,8 +8,8 @@ const mongoURL=process.env.DB_URL;// this is the name that is define in .env fil
 
 // setup connection
 mongoose.connect(mongoURL, {
-    useNewUrlParser : true,
-    useUnifiedTopology : true,
+    // useNewUrlParser : true,
+    // useUnifiedTopology : true,
 })
 
 
