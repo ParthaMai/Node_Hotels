@@ -79,9 +79,16 @@ router.get('/',jwtAuthMiddleware, async(req,res)=>{
 });
 
 // Profile Routes
-router.get('/profile', async(req,res)=>{
+router.get('/profile',jwtAuthMiddleware, async(req,res)=>{
 
     try{
+      const userData=req.user;
+      console.log("userData : ", userData);
+
+      const userId=userData.id;
+      const user = await person.findById(userId);
+
+      res.status(200).json(user);
       
     }
     catch(err){
