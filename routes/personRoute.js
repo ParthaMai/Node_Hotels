@@ -2,9 +2,10 @@ const express = require('express');
 const router =express.Router();
 const person=require('./../models/person'); // ../ means two folder pi6ee save a6e bole
 
+const {jwtAuthMiddleware,generateToken} = require('./../jwt');
 
 // post route to add a person
-router.post('/', async(req,res)=>{
+router.post('/signup', async(req,res)=>{
 
     try{
 
@@ -16,7 +17,15 @@ router.post('/', async(req,res)=>{
     // save the newPerson to the database
     const response = await newPerson.save();
     console.log('data saved');
-    res.status(200).json(response);
+    const payload={
+      id: response.id,
+      username:response.username
+    }  
+
+    const token= generateToken(payload); // we want to pass username in payload.
+    console.log("Token is : ", token);
+
+    res.status(200).json({response: response, token : token});
     }
     catch(err){
       console.log(err);
@@ -25,9 +34,37 @@ router.post('/', async(req,res)=>{
     }
 
 });
+// Login Route
+router.post('/login', async(req,res)=>{
+  try{
+      //Extract username and password form body
+      const{username,password}=req.body;
+
+      // Find the user by user name
+      const user= await person.findOne({username: username});
+
+      //if user doesnot exist and password does not match, return err
+      if(!user || !(await user.comparePassword(password))){
+        return res.status(401).json({error:"invailid username or password"});
+      }
+      const payload={
+        id:user.id,
+        username:user.username
+      }
+      const token=generateToken(payload);
+
+      // return token as response
+      res.json({token});
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({error:"internal server error"});
+  }
+});
+
 
 //to get the data from database(Mongodb)
-router.get('/', async(req,res)=>{
+router.get('/',jwtAuthMiddleware, async(req,res)=>{
 
     try{
       const data= await person.find();
