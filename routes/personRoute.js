@@ -78,6 +78,18 @@ router.get('/',jwtAuthMiddleware, async(req,res)=>{
 
 });
 
+// Profile Routes
+router.get('/profile', async(req,res)=>{
+
+    try{
+      
+    }
+    catch(err){
+      console.log(err);
+      res.status(404).json({error:'Internal server error'});
+    }
+});
+
 
 // // parameterized API calls
 router.get('/:worktype',async (req,res)=>{
